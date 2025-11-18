@@ -1,79 +1,126 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-  FieldTitle,
-} from "@/components/ui/field";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import SelectLocation from "./SelectLocation";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Field } from "@/components/ui/field";
 
-function SignUp() {
+export default function SignUp() {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    income: "",
+    location: "",
+  });
+
+  const sabahAreas = [
+    "Kota Kinabalu",
+    "Penampang",
+    "Putatan",
+    "Tuaran",
+    "Sandakan",
+    "Tawau",
+    "Lahad Datu",
+    "Keningau",
+    "Beaufort",
+    "Ranau",
+    "Semporna",
+  ];
+
+  const handleChange = (
+    field: keyof typeof formData,
+    value: string | number
+  ) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Submitted:", formData);
+  };
+
   return (
     <div className="flex min-h-svh items-center justify-center p-6">
-      <Card className="w-full max-w-2xl">
+      <Card className="w-full max-w-2xl rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-center text-lg">
-            Create an account
-          </CardTitle>
-          <CardDescription>
-            {/*Enter your information below to create your account*/}
-          </CardDescription>
+          <CardTitle className="text-center text-2xl">Sign Up</CardTitle>
         </CardHeader>
-        <CardContent m-3>
-          <form>
-            <FieldTitle className="text-base mb-2">
-              Personal Information
-            </FieldTitle>
-            <FieldSet>
-              <FieldGroup className="grid grid-cols-2 gap-4 mb-2">
-                <Field>
-                  <FieldLabel>Email</FieldLabel>
-                  <Input type="email" placeholder="user@gmail.com" />
-                </Field>
 
-                <Field>
-                  <FieldLabel>Password</FieldLabel>
-                  <Input type="password" />
-                </Field>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Field>
+              <Label>Username</Label>
+              <Input
+                placeholder="Enter username"
+                value={formData.username}
+                onChange={(e) => handleChange("username", e.target.value)}
+              />
+            </Field>
 
-                <Field>
-                  <FieldLabel>Income(RM)</FieldLabel>
-                  <Input type="number" />
-                </Field>
-              </FieldGroup>
+            <Field>
+              <Label>Email</Label>
+              <Input
+                type="email"
+                placeholder="Enter email"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+              />
+            </Field>
 
-              <FieldGroup>
-                <Field>
-                  <FieldLabel>Location</FieldLabel>
-                  <SelectLocation />
-                </Field>
-              </FieldGroup>
+            <Field>
+              <Label>Password</Label>
+              <Input
+                type="password"
+                placeholder="Enter password"
+                value={formData.password}
+                onChange={(e) => handleChange("password", e.target.value)}
+              />
+            </Field>
 
-              <FieldGroup>
-                <Field>
-                  <Button type="submit">Sign Up</Button>
-                  <FieldDescription>
-                    Don't have an account?
-                    <Button variant="link">Click here</Button>
-                  </FieldDescription>
-                </Field>
-              </FieldGroup>
-            </FieldSet>
+            <Field>
+              <Label>Monthly Income (RM)</Label>
+              <Input
+                type="number"
+                placeholder="Example: 3000"
+                value={formData.income}
+                onChange={(e) => handleChange("income", e.target.value)}
+              />
+            </Field>
+
+            <Field>
+              <Label>Location (Sabah)</Label>
+              <Select
+                onValueChange={(value) => handleChange("location", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select area" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sabahAreas.map((area) => (
+                    <SelectItem key={area} value={area}>
+                      {area}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+
+            <Field>
+              <Button type="submit" className="text-lg p-6 rounded-xl">
+                Create Account
+              </Button>
+            </Field>
           </form>
         </CardContent>
       </Card>
     </div>
   );
 }
-
-export default SignUp;

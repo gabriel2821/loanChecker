@@ -15,6 +15,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { useLocation, Link } from "react-router-dom";
 
 export function NavMain({
   items,
@@ -30,9 +31,11 @@ export function NavMain({
     }[]
   }[]
 }) {
+  
+const location = useLocation();
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      {/*<SidebarGroupLabel>Platform</SidebarGroupLabel>*/}
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -42,13 +45,19 @@ export function NavMain({
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+              {/*<CollapsibleTrigger asChild>*/}
+              <SidebarMenuButton
+                tooltip={item.title}
+                asChild
+                data-active={item.isActive ? "true" : "false"}
+              >
+                <a href={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
+                </a>
+                {/*<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />*/}
+              </SidebarMenuButton>
+              {/*</CollapsibleTrigger>*/}
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
@@ -67,5 +76,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

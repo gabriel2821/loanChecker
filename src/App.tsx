@@ -7,6 +7,8 @@ import Eligibility from "./Pages/CheckEligibility/Eligibility";
 import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import CompareLoan from "./Pages/CompareLoan/CompareLoan";
+import { Profile } from "./Pages/Profile/Profile";
+
 
 function App() {
 
@@ -20,6 +22,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="eligibility" element={<Eligibility />} />
             <Route path="compareLoan" element={<CompareLoan />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>
       </Router>

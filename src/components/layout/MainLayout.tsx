@@ -14,6 +14,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "../ui/sonner";
 
 export default function MainLayout() {
   return (
@@ -43,6 +44,7 @@ export default function MainLayout() {
           </div>
         </header>
         <div className="p-6">
+          <Toaster position="top-center" richColors/>
           <Outlet />
         </div>
       </SidebarInset>

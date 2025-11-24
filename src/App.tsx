@@ -8,24 +8,35 @@ import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import CompareLoan from "./Pages/CompareLoan/CompareLoan";
 import { Profile } from "./Pages/Profile/Profile";
+import { UserProvider } from "./components/Context/UserContext";
+import { ProtectedRoute } from "./Auth/ProtectedRoute";
 
 
 function App() {
 
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
+      <UserProvider>
+        <Router>
+          <Routes>
             <Route path="signup" element={<SignUp />} />
             <Route path="login" element={<Login />} />
-            <Route path="eligibility" element={<Eligibility />} />
-            <Route path="compareLoan" element={<CompareLoan />} />
-            <Route path="profile" element={<Profile />} />
-          </Route>
-        </Routes>
-      </Router>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="eligibility" element={<Eligibility />} />
+              <Route path="compareLoan" element={<CompareLoan />} />
+              <Route path="profile" element={<Profile />} />
+            </Route>
+          </Routes>
+        </Router>
+      </UserProvider>
     </>
   );
 }

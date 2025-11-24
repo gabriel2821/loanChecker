@@ -5,10 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,19 +22,22 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useUser } from "@/components/Context/UserContext";
 
 export function Profile() {
+  const { user: contextUser, setUser } = useUser();
   const [isEditing, setIsEditing] = useState(false);
-
-    const [profileData, setProfileData] = useState({
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phone: "+1 (555) 123-4567",
-      address: "123 Main Street, New York, NY 10001",
-      occupation: "Small Business Owner",
-      income: "50000",
-      bio: "Entrepreneur with 5 years of experience in retail business.",
-    });
+  
+  // Extended user data with additional fields
+  const [profileData, setProfileData] = useState({
+    name: contextUser?.name || "John Doe",
+    email: contextUser?.email || "john.doe@example.com",
+    phone: contextUser?.phone || "",
+    address: contextUser?.address || "",
+    occupation: contextUser?.occupation || "",
+    income: contextUser?.income ? String(contextUser.income) : "",
+    bio: contextUser?.bio || "",
+  });
 
   const verifications = [
     { label: "Email Verified", verified: true },
@@ -46,6 +47,17 @@ export function Profile() {
   ];
   
   const handleSave = () => {
+    // Save updated profile data to context
+    setUser({
+      name: profileData.name,
+      email: profileData.email,
+      avatar: contextUser?.avatar || "/avatars/default-avatar.jpg",
+      address: profileData.address,
+      income: profileData.income,
+      phone: profileData.phone,
+      occupation: profileData.occupation,
+      bio: profileData.bio,
+    });
     setIsEditing(false);
     toast.success("Profile updated successfully!");
   };
@@ -151,6 +163,7 @@ export function Profile() {
                  id="phone"
                  type="tel"
                  value={profileData.phone}
+                 placeholder="+1 (555) 123-4567"
                  onChange={(e) =>
                    setProfileData({
                      ...profileData,
@@ -196,6 +209,7 @@ export function Profile() {
                <Input
                  id="occupation"
                  value={profileData.occupation}
+                 placeholder="e.g., Small Business Owner"
                  onChange={(e) =>
                    setProfileData({
                      ...profileData,
@@ -213,8 +227,9 @@ export function Profile() {
                <span className="text-gray-600">$</span>
                <Input
                  id="income"
-                 type="number"
-                 value={profileData.income}
+                 type="text"
+                 value={profileData.income || ""}
+                 placeholder="e.g., 50000 or 50,001–100,000"
                  onChange={(e) =>
                    setProfileData({
                      ...profileData,
@@ -231,6 +246,7 @@ export function Profile() {
              <Textarea
                id="bio"
                value={profileData.bio}
+               placeholder="Tell us about yourself..."
                onChange={(e) =>
                  setProfileData({
                    ...profileData,

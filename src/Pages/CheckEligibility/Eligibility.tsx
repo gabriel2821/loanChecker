@@ -1,31 +1,16 @@
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from "@/components/ui/item";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Field,
-  FieldContent,
   FieldDescription,
-  FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSeparator,
   FieldSet,
-  FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,10 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/components/Context/UserContext";
 
 function Eligibility() {
+  const { user } = useUser();
+  const [annualIncome, setAnnualIncome] = useState(user?.income || "");
   const [status, setStatus] = useState("");
   const [loan, setLoan] = useState("");
 
@@ -64,7 +51,6 @@ function Eligibility() {
           Check Your Eligibility
         </h1>
         <p className="text-gray-600">
-          {" "}
           Provide your information to see which microloans you qualify for
         </p>
       </div>
@@ -110,7 +96,13 @@ function Eligibility() {
                     <FieldLabel htmlFor="annualIncome">
                       Annual Income
                     </FieldLabel>
-                    <Input id="annualIncome" type="number" placeholder="5000" />
+                    <Input
+                      id="annualIncome"
+                      type="text"
+                      placeholder="e.g., 50000 or 50,001–100,000"
+                      value={annualIncome}
+                      onChange={(e) => setAnnualIncome(e.target.value)}
+                    />
 
                     <FieldLabel htmlFor="employementStatus">
                       Employement Status
@@ -129,7 +121,7 @@ function Eligibility() {
                     </Select>
 
                     <FieldLabel htmlFor="loanPurpose">Loan Purpose</FieldLabel>
-                    <Select onValueChange={setStatus} value={loan}>
+                    <Select onValueChange={setLoan} value={loan}>
                       <SelectTrigger>
                         <SelectValue placeholder="Choose Purpose" />
                       </SelectTrigger>
@@ -147,7 +139,7 @@ function Eligibility() {
             </CardContent>
           </Card>
 
-          <Card>
+          {/*<Card>
             <CardContent>
               <FieldSet>
                 <FieldLegend>Required Documents</FieldLegend>
@@ -201,7 +193,7 @@ function Eligibility() {
                 </FieldGroup>
               </FieldSet>
             </CardContent>
-          </Card>
+          </Card>*/}
           <div className="flex justify-end">
             <Button type="submit">Submit Application</Button>
           </div>

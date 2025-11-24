@@ -1,126 +1,263 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { Field } from "@/components/ui/field";
+import { Field, FieldError } from "@/components/ui/field";
+import { useUser } from "@/components/Context/UserContext";
 
-export default function SignUp() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    income: "",
-    location: "",
-  });
+function SignUp() {
+  const { setUser } = useUser();
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [income, setIncome] = useState("");
+  const [location, setLocation] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const navigate = useNavigate();
 
-  const sabahAreas = [
-    "Kota Kinabalu",
-    "Penampang",
-    "Putatan",
-    "Tuaran",
-    "Sandakan",
-    "Tawau",
-    "Lahad Datu",
-    "Keningau",
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // Username validation
+    if (!userName.trim()) {
+      newErrors.userName = "Username is required";
+    } else if (userName.trim().length < 3) {
+      newErrors.userName = "Username must be at least 3 characters";
+    }
+
+    // Email validation
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Password validation
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    // Confirm password validation
+    if (!confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    // Income validation
+    if (!income) {
+      newErrors.income = "Please select an income range";
+    }
+
+    // Location validation
+    if (!location) {
+      newErrors.location = "Please select a location";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSignUp = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    // Store user data in context
+    const newUser = {
+      name: userName,
+      email: email,
+      avatar: "/avatars/default-avatar.jpg",
+      address: location,
+      income: income,
+    };
+
+    setUser(newUser);
+
+    // Simulate signup logic
+    alert(`Sign up successful!\n\nName: ${userName}\nEmail: ${email}\nIncome: ${income}\nLocation: ${location}`);
+    navigate("/");
+  };
+
+   const incomeRanges = [
+     "0–20,000",
+     "20,001–50,000",
+     "50,001–100,000",
+     "100,001+",
+   ];
+
+  // Sabah districts
+  const sabahDistricts = [
     "Beaufort",
+    "Kota Belud",
+    "Kota Kinabalu",
+    "Kota Marudu",
+    "Kota Sandakan",
+    "Kota Tawau",
+    "Kudat",
+    "Kunak",
+    "Labuan",
+    "Lahad Datu",
+    "Nabawan",
+    "Papar",
+    "Penampang",
+    "Pitas",
+    "Putatan",
     "Ranau",
+    "Sandakan",
     "Semporna",
+    "Sipitang",
+    "Tambunan",
+    "Tawau",
+    "Tenom",
+    "Tongod",
+    "Tuaran",
   ];
 
-  const handleChange = (
-    field: keyof typeof formData,
-    value: string | number
-  ) => {
-    setFormData({ ...formData, [field]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Submitted:", formData);
-  };
-
   return (
-    <div className="flex min-h-svh items-center justify-center p-6">
+    <div className="flex justify-center items-center h-screen">
       <Card className="w-full max-w-2xl rounded-2xl">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Sign Up</CardTitle>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Field>
-              <Label>Username</Label>
-              <Input
-                placeholder="Enter username"
-                value={formData.username}
-                onChange={(e) => handleChange("username", e.target.value)}
-              />
-            </Field>
+          <form onSubmit={handleSignUp} className="space-y-4">
+            {/* Name */}
+            <div>
+              <Field>
+                <Label htmlFor="userName">Username</Label>
+                <Input
+                  id="userName"
+                  type="text"
+                  placeholder="Enter username"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className={errors.userName ? "border-red-500" : ""}
+                />
+                {errors.userName && <FieldError>{errors.userName}</FieldError>}
+              </Field>
+            </div>
 
-            <Field>
-              <Label>Email</Label>
-              <Input
-                type="email"
-                placeholder="Enter email"
-                value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-              />
-            </Field>
+            {/* Email */}
+            <div>
+              <Field>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={errors.email ? "border-red-500" : ""}
+                />
+                {errors.email && <FieldError>{errors.email}</FieldError>}
+              </Field>
+            </div>
 
-            <Field>
-              <Label>Password</Label>
-              <Input
-                type="password"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={(e) => handleChange("password", e.target.value)}
-              />
-            </Field>
+            {/* Password */}
+            <div>
+              <Field>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter password (min. 8 characters)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={errors.password ? "border-red-500" : ""}
+                />
+                {errors.password && <FieldError>{errors.password}</FieldError>}
+              </Field>
+            </div>
 
-            <Field>
-              <Label>Monthly Income (RM)</Label>
-              <Input
-                type="number"
-                placeholder="Example: 3000"
-                value={formData.income}
-                onChange={(e) => handleChange("income", e.target.value)}
-              />
-            </Field>
+            {/* Confirm Password */}
+            <div>
+              <Field>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={errors.confirmPassword ? "border-red-500" : ""}
+                />
+                {errors.confirmPassword && <FieldError>{errors.confirmPassword}</FieldError>}
+              </Field>
+            </div>
 
-            <Field>
-              <Label>Location (Sabah)</Label>
-              <Select
-                onValueChange={(value) => handleChange("location", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select area" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sabahAreas.map((area) => (
-                    <SelectItem key={area} value={area}>
-                      {area}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
+            {/* Income */}
+            <div>
+              <Field>
+                <Label htmlFor="income">Monthly Income</Label>
+                <Select value={income} onValueChange={setIncome}>
+                  <SelectTrigger id="income" className={errors.income ? "border-red-500" : ""}>
+                    <SelectValue placeholder="Select income range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {incomeRanges.map((range) => (
+                      <SelectItem key={range} value={range}>
+                        {range}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.income && <FieldError>{errors.income}</FieldError>}
+              </Field>
+            </div>
 
-            <Field>
-              <Button type="submit" className="text-lg p-6 rounded-xl">
-                Create Account
-              </Button>
-            </Field>
+            {/* Location */}
+            <div>
+              <Field>
+                <Label htmlFor="location">Location (Sabah District)</Label>
+                <Select value={location} onValueChange={setLocation}>
+                  <SelectTrigger id="location" className={errors.location ? "border-red-500" : ""}>
+                    <SelectValue placeholder="Select your district" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sabahDistricts.map((district) => (
+                      <SelectItem key={district} value={district}>
+                        {district}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.location && <FieldError>{errors.location}</FieldError>}
+              </Field>
+            </div>
+
+            <Button type="submit" className="w-full">
+              Sign Up
+            </Button>
+
+            <div className="text-center">
+              <p className="text-sm text-gray-600">
+                Already have an account?{" "}
+                <Link to="/login" className="text-blue-600 hover:text-blue-800 font-semibold">
+                  Login here
+                </Link>
+              </p>
+            </div>
           </form>
         </CardContent>
       </Card>
     </div>
   );
 }
+
+export default SignUp;

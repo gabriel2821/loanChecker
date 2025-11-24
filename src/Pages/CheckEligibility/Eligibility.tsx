@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/components/Context/UserContext";
+import { toast } from "sonner";
 
 function Eligibility() {
   const { user } = useUser();
@@ -43,6 +44,11 @@ function Eligibility() {
     { value: "workingCapital", label: "Working Capital" },
     { value: "persanalUse", label: "Porsanal Use" },
   ];
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Application Submitted Successfully!");
+  };
 
   return (
     <div className="space-y-3">
@@ -83,7 +89,7 @@ function Eligibility() {
           </CardContent>
         </Card>
 
-        <form className="space-y-3">
+        <form className="space-y-3" onSubmit={handleSubmit}>
           <Card>
             <CardContent>
               <FieldSet>

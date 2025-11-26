@@ -9,6 +9,11 @@ type User = {
   phone?: string;
   occupation?: string;
   bio?: string;
+  employmentStatus?: string;
+  loanPurpose?: string;
+  monthlyExpenses?: string;
+  existingDebts?: string;
+  loanAmount?: string;
 };
 
 type UserContextType = {

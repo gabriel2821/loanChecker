@@ -21,6 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sparkles, TrendingUp, CircleCheckBig, CheckCircle, DollarSign, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
     const loanComparisons = [
@@ -53,15 +54,19 @@ export default function Dashboard() {
       },
     ];
 
+    //const eligibilityChecks = [
+    //  { category: "Credit Score", status: "verified", result: "Good (680)" },
+    //  {
+    //    category: "Income Verification",
+    //    status: "verified",
+    //    result: "Verified",
+    //  },
+    //  { category: "Debt-to-Income", status: "pending", result: "Processing" },
+    //];
+
     const eligibilityChecks = [
-      { category: "Credit Score", status: "verified", result: "Good (680)" },
-      {
-        category: "Income Verification",
-        status: "verified",
-        result: "Verified",
-      },
-      { category: "Debt-to-Income", status: "pending", result: "Processing" },
-    ];
+      
+    ]
 
     const getMatchScoreColor = (score: number) => {
       if (score >= 80) return "text-green-600";
@@ -82,6 +87,30 @@ export default function Dashboard() {
           </Badge>
         );
       };
+
+      //const infoItems = [
+      //  {
+      //    title: "Est. Home Value",
+      //    value: "RM 389,197",
+      //    description: "Based on 90% Loan-to-value (LTV)",
+      //  },
+      //  {
+      //    title: "Tenure",
+      //    value: "35 Years",
+      //    description:
+      //      "Based on max tenure of 35 years or up to age 70, whichever is earlier.",
+      //  },
+      //  {
+      //    title: "Installments",
+      //    value: "RM 1,530",
+      //  },
+      //  {
+      //    title: "Interest",
+      //    value: "3.90%",
+      //  },
+      //];
+
+      //const dsrPercentage = 27;
 
   return (
     <div className="space-y-6">
@@ -127,7 +156,7 @@ export default function Dashboard() {
       </div>
 
       {/* Loan Comparisons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols gap-4">
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -137,7 +166,9 @@ export default function Dashboard() {
                   Microloans matching your profile
                 </CardDescription>
               </div>
-              <Button>View All</Button>
+              <Button>
+                <Link to="/compareLoan">View All</Link>
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -169,18 +200,18 @@ export default function Dashboard() {
         </Card>
 
         {/* Eligibility Checks */}
-        <Card>
+        {/*<Card>
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>Eligibility Checks</CardTitle>
                 <CardDescription>Your qualification status</CardDescription>
-              </div>
-              <Button variant="outline">Update Info</Button>
-            </div>
+              </div>*/}
+        {/*<Button variant="outline">Update Info</Button>*/}
+        {/*</div>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {eligibilityChecks.map((check, index) => (
+          <CardContent className="space-y-3">*/}
+        {/*{eligibilityChecks.map((check, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -194,9 +225,89 @@ export default function Dashboard() {
                 </div>
                 {getStatusBadge(check.status)}
               </div>
-            ))}
+            ))}*/}
+
+        {/*</CardContent>
+        </Card>*/}
+
+        {/*<Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">
+              Indicative Loan Eligibility
+            </CardTitle>
+            <div className="text-4xl font-bold mt-2">RM 350,277</div>
+          </CardHeader>
+
+          <CardContent className="p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">*/}
+        {/* Left Column - now using map(...) */}
+        {/*<div className="space-y-6">
+                {infoItems.map((item, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="text-lg font-semibold">{item.title}</div>
+                    <div className="text-xl font-medium">{item.value}</div>
+                    {item.description && (
+                      <div className="text-xs text-gray-500">
+                        {item.description}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>*/}
+
+        {/* Right Column – DSR Gauge */}
+        {/*<div className="flex flex-col items-center justify-center">
+                <div className="relative w-48 h-48">*/}
+        {/* Background arc */}
+        {/*<svg className="absolute inset-0" viewBox="0 0 100 100">
+                    <path
+                      d="M10 60 A40 40 0 0 1 90 60"
+                      fill="none"
+                      stroke="#e5e7eb"
+                      strokeWidth="10"
+                    />
+                  </svg>*/}
+
+        {/* Progress arc */}
+        {/*<svg className="absolute inset-0" viewBox="0 0 100 100">
+                    <path
+                      d="M10 60 A40 40 0 0 1 90 60"
+                      fill="none"
+                      stroke="url(#gradient)"
+                      strokeWidth="10"
+                      strokeDasharray="180"
+                      strokeDashoffset={180 * (1 - dsrPercentage / 100)}
+                      strokeLinecap="round"
+                    />
+
+                    <defs>
+                      <linearGradient id="gradient">
+                        <stop offset="0%" stopColor="#16a34a" />
+                        <stop offset="50%" stopColor="#eab308" />
+                        <stop offset="100%" stopColor="#ef4444" />
+                      </linearGradient>
+                    </defs>
+                  </svg>*/}
+
+        {/* Center text */}
+        {/*<div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="text-3xl font-semibold">
+                      {dsrPercentage}%
+                    </div>
+                    <div className="text-yellow-600 text-lg font-medium">
+                      Good
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Debt Servicing Ratio (DSR)
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-xs text-gray-500 mt-4">What Is This?</div>
+              </div>
+            </div>
           </CardContent>
-        </Card>
+        </Card>*/}
       </div>
 
       <div>

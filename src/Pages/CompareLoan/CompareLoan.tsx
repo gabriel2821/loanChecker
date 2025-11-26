@@ -250,14 +250,14 @@ function CompareLoan() {
                 </div>
               </div>
 
-              <Button
+              {/*<Button
                 className="w-full"
                 variant={loan.eligible ? "default" : "outline"}
                 disabled={!loan.eligible}
                 onClick={() => setSelectedLoan(loan.id)}
               >
                 {loan.eligible ? "Apply with Lender" : "Not Eligible"}
-              </Button>
+              </Button>*/}
             </CardContent>
           </Card>
         ))}

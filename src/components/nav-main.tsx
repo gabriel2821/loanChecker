@@ -48,15 +48,15 @@ const location = useLocation();
               {/*<CollapsibleTrigger asChild>*/}
               <SidebarMenuButton
                 tooltip={item.title}
+                isActive={location.pathname === item.url}
                 asChild
-                data-active={item.isActive ? "true" : "false"}
               >
-                <a href={item.url}>
+                <Link to={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
-                </a>
+                </Link>
                 {/*<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />*/}
-              </SidebarMenuButton>
+              </SidebarMenuButton >
               {/*</CollapsibleTrigger>*/}
               <CollapsibleContent>
                 <SidebarMenuSub>

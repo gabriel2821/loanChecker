@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Field, FieldError } from "@/components/ui/field";
 import { useUser } from "@/components/Context/UserContext";
+import { toast } from "sonner";
 
 function Login() {
   const { setUser, user: existingUser } = useUser();
@@ -51,7 +52,9 @@ function Login() {
 
     setUser(loggedInUser);
 
-    alert(`Login successful! Welcome, ${loggedInUser.name}`);
+    toast(`Welcome, ${loggedInUser.name}!`, {
+      className: "justify-center", // centers the toast container
+    });
     navigate("/"); // redirect to dashboard or home
   };
 
@@ -97,7 +100,10 @@ function Login() {
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-blue-600 hover:text-blue-800 font-semibold">
+              <Link
+                to="/signup"
+                className="text-blue-600 hover:text-blue-800 font-semibold"
+              >
                 Sign up here
               </Link>
             </p>

@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -13,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Field, FieldError } from "@/components/ui/field";
 import { useUser } from "@/components/Context/UserContext";
+import { toast } from "sonner";
 
 function SignUp() {
   const { setUser } = useUser();
@@ -22,6 +29,12 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [income, setIncome] = useState("");
   const [location, setLocation] = useState("");
+  const [age, setAge] = useState("");
+  const [employmentStatus, setEmploymentStatus] = useState("");
+  const [loanPurpose, setLoanPurpose] = useState("");
+  const [monthlyExpenses, setMonthlyExpenses] = useState("");
+  const [existingDebts, setExistingDebts] = useState("");
+  const [loanAmount, setLoanAmount] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const navigate = useNavigate();
 
@@ -66,6 +79,16 @@ function SignUp() {
       newErrors.location = "Please select a location";
     }
 
+    // Employment status validation
+    if (!employmentStatus) {
+      newErrors.employmentStatus = "Please select employment status";
+    }
+
+    // Loan purpose validation
+    if (!loanPurpose) {
+      newErrors.loanPurpose = "Please select loan purpose";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -83,22 +106,23 @@ function SignUp() {
       email: email,
       avatar: "/avatars/default-avatar.jpg",
       address: location,
+      age: age,
       income: income,
+      employmentStatus: employmentStatus,
+      loanPurpose: loanPurpose,
+      monthlyExpenses: monthlyExpenses,
+      existingDebts: existingDebts,
+      loanAmount: loanAmount,
     };
-
     setUser(newUser);
-
-    // Simulate signup logic
-    alert(`Sign up successful!\n\nName: ${userName}\nEmail: ${email}\nIncome: ${income}\nLocation: ${location}`);
+    
+    toast.message(`Welcome ${userName}!`, {
+      className: "text-center",
+    });
     navigate("/");
   };
 
-   const incomeRanges = [
-     "0–20,000",
-     "20,001–50,000",
-     "50,001–100,000",
-     "100,001+",
-   ];
+  const incomeRanges = ["0–2,000", "2,001–5,000", "5,001–10,000", "10,001+"];
 
   // Sabah districts
   const sabahDistricts = [
@@ -129,130 +153,271 @@ function SignUp() {
   ];
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card className="w-full max-w-2xl rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">Sign Up</CardTitle>
+    <div className="flex justify-center items-start min-h-screen bg-gray-50 py-10">
+      <Card className="w-full max-w-4xl rounded-2xl shadow-lg">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold">Sign Up</CardTitle>
+          <CardDescription className="text-gray-600 mt-1">
+            Complete your profile to see which microloans you qualify for.
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSignUp} className="space-y-4">
-            {/* Name */}
-            <div>
-              <Field>
-                <Label htmlFor="userName">Username</Label>
-                <Input
-                  id="userName"
-                  type="text"
-                  placeholder="Enter username"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  className={errors.userName ? "border-red-500" : ""}
-                />
-                {errors.userName && <FieldError>{errors.userName}</FieldError>}
-              </Field>
+          <form onSubmit={handleSignUp} className="space-y-6">
+            {/* --- Personal Information --- */}
+            <Card className="bg-gray-50 border-gray-200">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">
+                  Personal Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Field>
+                    <Label htmlFor="userName">Username</Label>
+                    <Input
+                      id="userName"
+                      type="text"
+                      placeholder="Enter username"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      className={errors.userName ? "border-red-500" : ""}
+                    />
+                    {errors.userName && (
+                      <FieldError>{errors.userName}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={errors.email ? "border-red-500" : ""}
+                    />
+                    {errors.email && (
+                      <FieldError>{errors.email}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className={errors.password ? "border-red-500" : ""}
+                    />
+                    {errors.password && (
+                      <FieldError>{errors.password}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="Confirm password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className={errors.confirmPassword ? "border-red-500" : ""}
+                    />
+                    {errors.confirmPassword && (
+                      <FieldError>{errors.confirmPassword}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="location">Location (Sabah District)</Label>
+                    <Select value={location} onValueChange={setLocation}>
+                      <SelectTrigger
+                        id="location"
+                        className={errors.location ? "border-red-500" : ""}
+                      >
+                        <SelectValue placeholder="Select your district" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sabahDistricts.map((district) => (
+                          <SelectItem key={district} value={district}>
+                            {district}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.location && (
+                      <FieldError>{errors.location}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="age">Age</Label>
+                    <Input
+                      id="age"
+                      type="number"
+                      placeholder="e.g., 25"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                    />
+                  </Field>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* --- Financial Information --- */}
+            <Card className="bg-gray-50 border-gray-200">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">
+                  Financial Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Field>
+                    <Label htmlFor="income">Monthly Income</Label>
+                    <Select value={income} onValueChange={setIncome}>
+                      <SelectTrigger id="income" className={errors.income ? "border-red-500" : ""}>
+                        <SelectValue placeholder="Select income range" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {incomeRanges.map((range) => (
+                          <SelectItem key={range} value={range}>
+                            {range}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.income && (
+                      <FieldError>{errors.income}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="monthlyExpenses">Monthly Expenses</Label>
+                    <Input
+                      id="monthlyExpenses"
+                      type="number"
+                      placeholder="e.g., 1500"
+                      value={monthlyExpenses}
+                      onChange={(e) => setMonthlyExpenses(e.target.value)}
+                    />
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="existingDebts">Existing Debts</Label>
+                    <Input
+                      id="existingDebts"
+                      type="number"
+                      placeholder="e.g., 2000"
+                      value={existingDebts}
+                      onChange={(e) => setExistingDebts(e.target.value)}
+                    />
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="loanAmount">Loan Amount Requested</Label>
+                    <Input
+                      id="loanAmount"
+                      type="number"
+                      placeholder="e.g., 5000"
+                      value={loanAmount}
+                      onChange={(e) => setLoanAmount(e.target.value)}
+                    />
+                  </Field>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* --- Employment Details --- */}
+            <Card className="bg-gray-50 border-gray-200">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">
+                  Employment Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Field>
+                    <Label htmlFor="employmentStatus">Employment Status</Label>
+                    <Select
+                      value={employmentStatus}
+                      onValueChange={setEmploymentStatus}
+                    >
+                      <SelectTrigger id="employmentStatus" className={errors.employmentStatus ? "border-red-500" : ""}>
+                        <SelectValue placeholder="Select employment status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="fullTime">
+                          Full Time Employment
+                        </SelectItem>
+                        <SelectItem value="selfEmployed">
+                          Self Employed
+                        </SelectItem>
+                        <SelectItem value="partTime">
+                          Part-Time Employment
+                        </SelectItem>
+                        <SelectItem value="businessOwner">
+                          Business Owner
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.employmentStatus && (
+                      <FieldError>{errors.employmentStatus}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="loanPurpose">Loan Purpose</Label>
+                    <Select value={loanPurpose} onValueChange={setLoanPurpose}>
+                      <SelectTrigger id="loanPurpose" className={errors.loanPurpose ? "border-red-500" : ""}>
+                        <SelectValue placeholder="Select loan purpose" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="expansion">
+                          Business Expansion
+                        </SelectItem>
+                        <SelectItem value="equipment">
+                          Equipment Purchase
+                        </SelectItem>
+                        <SelectItem value="inventory">Inventory</SelectItem>
+                        <SelectItem value="workingCapital">
+                          Working Capital
+                        </SelectItem>
+                        <SelectItem value="personalUse">
+                          Personal Use
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.loanPurpose && (
+                      <FieldError>{errors.loanPurpose}</FieldError>
+                    )}
+                  </Field>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* --- Submit Button --- */}
+            <div className="flex justify-center">
+              <Button type="submit" className="w-full md:w-1/2">
+                Sign Up
+              </Button>
             </div>
 
-            {/* Email */}
-            <div>
-              <Field>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={errors.email ? "border-red-500" : ""}
-                />
-                {errors.email && <FieldError>{errors.email}</FieldError>}
-              </Field>
-            </div>
-
-            {/* Password */}
-            <div>
-              <Field>
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter password (min. 8 characters)"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={errors.password ? "border-red-500" : ""}
-                />
-                {errors.password && <FieldError>{errors.password}</FieldError>}
-              </Field>
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <Field>
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={errors.confirmPassword ? "border-red-500" : ""}
-                />
-                {errors.confirmPassword && <FieldError>{errors.confirmPassword}</FieldError>}
-              </Field>
-            </div>
-
-            {/* Income */}
-            <div>
-              <Field>
-                <Label htmlFor="income">Monthly Income</Label>
-                <Select value={income} onValueChange={setIncome}>
-                  <SelectTrigger id="income" className={errors.income ? "border-red-500" : ""}>
-                    <SelectValue placeholder="Select income range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {incomeRanges.map((range) => (
-                      <SelectItem key={range} value={range}>
-                        {range}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.income && <FieldError>{errors.income}</FieldError>}
-              </Field>
-            </div>
-
-            {/* Location */}
-            <div>
-              <Field>
-                <Label htmlFor="location">Location (Sabah District)</Label>
-                <Select value={location} onValueChange={setLocation}>
-                  <SelectTrigger id="location" className={errors.location ? "border-red-500" : ""}>
-                    <SelectValue placeholder="Select your district" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sabahDistricts.map((district) => (
-                      <SelectItem key={district} value={district}>
-                        {district}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.location && <FieldError>{errors.location}</FieldError>}
-              </Field>
-            </div>
-
-            <Button type="submit" className="w-full">
-              Sign Up
-            </Button>
-
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link to="/login" className="text-blue-600 hover:text-blue-800 font-semibold">
-                  Login here
-                </Link>
-              </p>
-            </div>
+            {/* --- Login Link --- */}
+            <p className="text-center text-sm text-gray-500">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-600 font-semibold hover:underline"
+              >
+                Login here
+              </Link>
+            </p>
           </form>
         </CardContent>
       </Card>

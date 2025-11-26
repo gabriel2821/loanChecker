@@ -25,10 +25,13 @@ import { useUser } from "@/components/Context/UserContext";
 import { toast } from "sonner";
 
 function Eligibility() {
-  const { user } = useUser();
-  const [annualIncome, setAnnualIncome] = useState(user?.income || "");
-  const [status, setStatus] = useState("");
-  const [loan, setLoan] = useState("");
+  const { user, setUser } = useUser();
+  const [monthlyIncome, setAnnualIncome] = useState(user?.income || "");
+  const [status, setStatus] = useState(user?.employmentStatus || "");
+  const [loan, setLoan] = useState(user?.loanPurpose || "");
+  const [monthlyExpenses, setMonthlyExpenses] = useState(user?.monthlyExpenses || "");
+  const [existingDebts, setExistingDebts] = useState(user?.existingDebts || "");
+  const [loanAmount, setLoanAmount] = useState(user?.loanAmount || "");
 
   const employmentStatus = [
     { value: "fullTime", label: "Full Time Employment" },
@@ -39,14 +42,28 @@ function Eligibility() {
 
   const loanPurpose = [
     { value: "expansion", label: "Business Expansion" },
-    { value: "selfEmployed", label: "Equipment Purchase" },
+    { value: "equipment", label: "Equipment Purchase" },
     { value: "inventory", label: "Inventory" },
     { value: "workingCapital", label: "Working Capital" },
-    { value: "persanalUse", label: "Porsanal Use" },
+    { value: "personalUse", label: "Personal Use" },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Update user context with the latest values
+    if (user) {
+      setUser({
+        ...user,
+        income: monthlyIncome,
+        employmentStatus: status,
+        loanPurpose: loan,
+        monthlyExpenses: monthlyExpenses,
+        existingDebts: existingDebts,
+        loanAmount: loanAmount,
+      });
+    }
+    
     toast.success("Application Submitted Successfully!");
   };
 
@@ -60,16 +77,7 @@ function Eligibility() {
           Provide your information to see which microloans you qualify for
         </p>
       </div>
-      {/*<Item>
-        <ItemContent>
-          <ItemTitle className="text-2xl md:text-4xl font-semibold tracking-tight">
-            Check Your Eligibility
-          </ItemTitle>
-          <ItemDescription>
-            Provide your information to see which microloans you qualify for
-          </ItemDescription>
-        </ItemContent>
-      </Item>*/}
+
       <div className="grid grid-col space-y-3">
         <Card className="mb-6 bg-purple-50 border-purple-200">
           <CardContent>
@@ -100,13 +108,13 @@ function Eligibility() {
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="annualIncome">
-                      Annual Income
+                      Monthly Income
                     </FieldLabel>
                     <Input
                       id="annualIncome"
                       type="text"
-                      placeholder="e.g., 50000 or 50,001–100,000"
-                      value={annualIncome}
+                      //placeholder="e.g., 50000 or 50,001–100,000"
+                      value={monthlyIncome}
                       onChange={(e) => setAnnualIncome(e.target.value)}
                     />
 
@@ -139,67 +147,45 @@ function Eligibility() {
                         ))}
                       </SelectContent>
                     </Select>
+
+                    <FieldLabel htmlFor="monthlyExpenses">
+                      Monthly Expenses
+                    </FieldLabel>
+                    <Input
+                      id="monthlyExpenses"
+                      type="number"
+                      placeholder="1500"
+                      value={monthlyExpenses}
+                      onChange={(e) => setMonthlyExpenses(e.target.value)}
+                    />
+
+                    <FieldLabel htmlFor="existingDebts">
+                      Existing Debts
+                    </FieldLabel>
+                    <Input
+                      id="existingDebts"
+                      type="number"
+                      placeholder="2000"
+                      value={existingDebts}
+                      onChange={(e) => setExistingDebts(e.target.value)}
+                    />
+
+                    <FieldLabel htmlFor="loanAmount">
+                      Loan Amount Requested
+                    </FieldLabel>
+                    <Input
+                      id="loanAmount"
+                      type="number"
+                      placeholder="5000"
+                      value={loanAmount}
+                      onChange={(e) => setLoanAmount(e.target.value)}
+                    />
                   </Field>
                 </FieldGroup>
               </FieldSet>
             </CardContent>
           </Card>
 
-          {/*<Card>
-            <CardContent>
-              <FieldSet>
-                <FieldLegend>Required Documents</FieldLegend>
-                <FieldDescription>
-                  Upload documents to verify your eligibility
-                </FieldDescription>
-
-                <FieldGroup className="bg-gray-100 p-4 rounded-md">
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldLabel className="flex items-center gap-2">
-                        Government-issued ID
-                        <Badge variant="destructive">Required</Badge>
-                      </FieldLabel>
-                      <FieldDescription>
-                        Passport, Driver's License, or National ID
-                      </FieldDescription>
-                    </FieldContent>
-                    <Input type="file" className="flex-1" />
-                  </Field>
-                </FieldGroup>
-
-                <FieldGroup className="bg-gray-100 p-4 rounded-md">
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldLabel className="flex items-center gap-2">
-                        Proof of Income
-                        <Badge variant="destructive">Required</Badge>
-                      </FieldLabel>
-                      <FieldDescription>
-                        Pay stubs, tax returns, or employment letter
-                      </FieldDescription>
-                    </FieldContent>
-                    <Input type="file" className="flex-1" />
-                  </Field>
-                </FieldGroup>
-
-                <FieldGroup className="bg-gray-100 p-4 rounded-md">
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldLabel className="flex items-center gap-2">
-                        Bank Statements
-                        <Badge variant="destructive">Required</Badge>
-                      </FieldLabel>
-                      <FieldDescription>
-                        Utility bill or lease agreement
-                      </FieldDescription>
-                    </FieldContent>
-                    <Input type="file" className="flex-1" />
-                  </Field>
-                </FieldGroup>
-              </FieldSet>
-            </CardContent>
-          </Card>*/}
           <div className="flex justify-end">
             <Button type="submit">Submit Application</Button>
           </div>

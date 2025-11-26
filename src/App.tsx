@@ -10,12 +10,14 @@ import CompareLoan from "./Pages/CompareLoan/CompareLoan";
 import { Profile } from "./Pages/Profile/Profile";
 import { UserProvider } from "./components/Context/UserContext";
 import { ProtectedRoute } from "./Auth/ProtectedRoute";
+import { Toaster } from "./components/ui/sonner";
 
 
 function App() {
 
   return (
     <>
+      <Toaster position="top-center" richColors />
       <UserProvider>
         <Router>
           <Routes>

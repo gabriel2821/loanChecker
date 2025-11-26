@@ -89,6 +89,21 @@ function SignUp() {
       newErrors.loanPurpose = "Please select loan purpose";
     }
 
+    // Monthly expenses validation
+    if (!monthlyExpenses) {
+      newErrors.monthlyExpenses = "Please enter monthly expenses";
+    }
+
+    // Existing debts validation
+    if (!existingDebts) {
+      newErrors.existingDebts = "Please enter existing debts";
+    }
+
+    // Loan amount validation
+    if (!loanAmount) {
+      newErrors.loanAmount = "Please enter loan amount";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -305,7 +320,11 @@ function SignUp() {
                       placeholder="e.g., 1500"
                       value={monthlyExpenses}
                       onChange={(e) => setMonthlyExpenses(e.target.value)}
+                      className={errors.monthlyExpenses ? "border-red-500" : ""}
                     />
+                    {errors.monthlyExpenses && (
+                      <FieldError>{errors.monthlyExpenses}</FieldError>
+                    )}
                   </Field>
 
                   <Field>
@@ -316,7 +335,11 @@ function SignUp() {
                       placeholder="e.g., 2000"
                       value={existingDebts}
                       onChange={(e) => setExistingDebts(e.target.value)}
+                      className={errors.existingDebts ? "border-red-500" : ""}
                     />
+                    {errors.existingDebts && (
+                      <FieldError>{errors.existingDebts}</FieldError>
+                    )}
                   </Field>
 
                   <Field>
@@ -327,7 +350,11 @@ function SignUp() {
                       placeholder="e.g., 5000"
                       value={loanAmount}
                       onChange={(e) => setLoanAmount(e.target.value)}
+                      className={errors.loanAmount ? "border-red-500" : ""}
                     />
+                    {errors.loanAmount && (
+                      <FieldError>{errors.loanAmount}</FieldError>
+                    )}
                   </Field>
                 </div>
               </CardContent>
